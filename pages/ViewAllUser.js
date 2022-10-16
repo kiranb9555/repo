@@ -22,7 +22,7 @@ constructor(props) {
  
 
     componentDidMount=() => {
-      db.transaction((tx) => {
+      this.db.transaction((tx) => {
         tx.executeSql('SELECT * FROM table_user', [], (tx, results) => {
           var temp = [];
           for (let i = 0; i < results.rows.length; ++i)
@@ -58,8 +58,8 @@ constructor(props) {
         <View style={{ flex: 1, backgroundColor: 'white' }}>
           <View style={{ flex: 1 }}>
             <FlatList
-              data={flatListItems}
-              ItemSeparatorComponent={listViewItemSeparator}
+              data={this.state.flatListItems}
+              ItemSeparatorComponent={this.listViewItemSeparator}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => listItemView(item)}
             />

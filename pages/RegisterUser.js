@@ -29,7 +29,7 @@ export default class RegisterUser extends Component {
   }
      this.db = openDatabase({name: 'UserDatabase.db'});
 
-   this.Intialize();
+  //  this.Intialize();
   }
 
 
@@ -39,12 +39,10 @@ export default class RegisterUser extends Component {
   // let [userAddress, setUserAddress] = useState('');
 
 
-
-
-
- RegisterUser = ({navigation}) => {
+ RegisterUser = () => {
   
-
+const {userName, userContact, userAddress} = this.state;
+const props = this.props;
 console.log(userName, userContact, userAddress);
 
     if (!userName) {
@@ -73,7 +71,7 @@ console.log(userName, userContact, userAddress);
               [
                 {
                   text: 'Ok',
-                  onPress: () => navigation.navigate('HomeScreen'),
+                  onPress: () => props?.navigation?.navigate('HomeScreen'),
                 },
               ],
               {cancelable: false},
@@ -115,7 +113,7 @@ console.log(userName, userContact, userAddress);
                 multiline={true}
                 style={{textAlignVertical: 'top', padding: 10}}
               />
-              <Mybutton title="Submit" customClick={Register_user} />
+              <Mybutton title="Submit" customClick={this.RegisterUser} />
             </KeyboardAvoidingView>
           </ScrollView>
         </View>

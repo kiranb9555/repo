@@ -50,12 +50,12 @@ export default class ViewUser extends Component {
               onChangeText={(inputId) => this.setState({inputUserId:inputId})}
               style={{padding: 10}}
             />
-            <Mybutton title="Search User" customClick={searchUser} />
+            <Mybutton title="Search User" customClick={this.searchUser} />
             <View style={{marginLeft: 35, marginRight: 35, marginTop: 10}}>
-              <Text>User Id: {userData.user_id}</Text>
-              <Text>User Name: {userData.user_name}</Text>
-              <Text>User Contact: {userData.user_contact}</Text>
-              <Text>User Address: {userData.user_address}</Text>
+              <Text>User Id: {this.state.userData.user_id}</Text>
+              <Text>User Name: {this.state.userData.user_name}</Text>
+              <Text>User Contact: {this.state.userData.user_contact}</Text>
+              <Text>User Address: {this.state.userData.user_address}</Text>
             </View>
           </View>
           <Text style={{fontSize: 18, textAlign: 'center', color: 'grey'}}>

@@ -51,23 +51,23 @@ componentDidMount(){
           <Mytext text="SQLite Example" />
           <Mybutton
             title="Register"
-            onPress={() => {console.log('reg');navigation.navigate('Register')}}
+            customClick={() => this.props?.navigation.navigate('Register')}
           />
           <Mybutton
             title="Update"
-            customClick={() => navigation.navigate('Update')}
+            customClick={() => this.props?.navigation.navigate('Update')}
           />
           <Mybutton
             title="View"
-            customClick={() => navigation.navigate('View')}
+            customClick={() => this.props?.navigation.navigate('View')}
           />
           <Mybutton     
             title="View All"
-            customClick={() => navigation.navigate('ViewAll')}
+            customClick={() => this.props?.navigation.navigate('ViewAll')}
           />
           <Mybutton
             title="Delete"
-            customClick={() => navigation.navigate('Delete')}
+            customClick={() => this.props?.navigation.navigate('Delete')}
           />
         </View>
         <Text style={{fontSize: 18, textAlign: 'center', color: 'grey'}}>

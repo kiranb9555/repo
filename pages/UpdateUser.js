@@ -122,23 +122,23 @@ export default class UpdateUser extends Component {
                   style={{padding: 10}}
                   onChangeText={(inputId) => this.setState({inputUserId:inputId})}
                 />
-                <Mybutton title="Search User" customClick={searchUser} />
+                <Mybutton title="Search User" customClick={this.searchUser} />
                 <Mytextinput
                   placeholder="Enter Name"
-                  value={userName}
+                  value={this.userName}
                   style={{padding: 10}}
                   onChangeText={(userN) => this.setState({userName:userN})}
                 />
                 <Mytextinput
                   placeholder="Enter Contact No"
-                  value={'' + userContact}
+                  value={'' + this.userContact}
                   onChangeText={(userc) => this.setState({userContact:userc})}
                   maxLength={10}
                   style={{padding: 10}}
                   keyboardType="numeric"
                 />
                 <Mytextinput
-                  value={userAddress}
+                  value={this.userAddress}
                   placeholder="Enter Address"
                   onChangeText={(usera) => this.setState({userAddress:usera})}
                   maxLength={225}
@@ -146,7 +146,7 @@ export default class UpdateUser extends Component {
                   multiline={true}
                   style={{textAlignVertical: 'top', padding: 10}}
                 />
-                <Mybutton title="Update User" customClick={updateUser} />
+                <Mybutton title="Update User" customClick={this.updateUser} />
               </KeyboardAvoidingView>
             </ScrollView>
           </View>
