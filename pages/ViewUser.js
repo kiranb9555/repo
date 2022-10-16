@@ -22,17 +22,16 @@ export default class ViewUser extends Component {
    }}
   
    searchUser = () => {
-    console.log(inputUserId);
-    setUserData({});
-    db.transaction((tx) => {
+    this.setState({userData: {}});
+    this.db.transaction((tx) => {
       tx.executeSql(
         'SELECT * FROM table_user where user_id = ?',
-        [inputUserId],
+        [this.state.inputUserId],
         (tx, results) => {
           var len = results.rows.length;
           console.log('len', len);
           if (len > 0) {
-            setUserData(results.rows.item(0));
+            this.setState({userData: results.rows.item(0)});
           } else {
             alert('No user found');
           }
