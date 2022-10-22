@@ -87,11 +87,12 @@ export default class Router extends Component {
   // }
 
 
-  Detailslistgridview = () => { {console.log('detailsgridview')}
+  Detailslistgridview = () => {
     return (
       <SafeAreaView>
-     {console.log('detailsgridview')}
+        {console.log('detailslistview', this.state.data)}
         <FlatList
+          key={'list'}
           numColumns={2}
           data={this.state.data}
           renderItem={item => this.renderItemComponent(item)}
@@ -109,7 +110,7 @@ export default class Router extends Component {
       <SafeAreaView>
         {console.log('detailslistview', this.state.data)}
         <FlatList
-          
+          key={'gridList'}
           data={this.state.data}
           renderItem={item => this.renderItemComponent(item)}
           keyExtractor={item => item.id.toString()}
@@ -121,11 +122,10 @@ export default class Router extends Component {
   };
 
   render() {
-    console.log('presslist', this.state.data)
+    console.log('presslist', this.state.data);
     return (
       <View style={a.viewwsty}>
         <View style={a.viewsty}>
-
 
           <TouchableOpacity style={a.to1}>
             
@@ -144,7 +144,7 @@ export default class Router extends Component {
           </TouchableOpacity>
         </View>
         
-        {this.state.presslist ? <this.Detailslistsview/>  : <this.Detailsgridview/> }
+        {this.state.presslist ? this.Detailslistsview()  : this.Detailslistgridview() }
       </View>
     );
   }
