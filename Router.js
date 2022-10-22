@@ -20,7 +20,7 @@
 // export default Router
 
 import a from './style';
-import {View, Button} from 'react-native';
+import {View, Button, TextInput} from 'react-native';
 import {
   StyleSheet,
   SafeAreaView,
@@ -36,8 +36,10 @@ export default class Router extends Component {
     super(props);
     this.state = {
       data: [],
+      searchedData: [],
       refreshing: true,
       presslist: true,
+      searchText: ''
     };
   }
   componentDidMount() {
@@ -48,13 +50,12 @@ export default class Router extends Component {
     fetch('https://gorest.co.in/public/v2/users')
       .then(res => res.json())
       .then(resJson => {
-        this.setState({data: resJson});
+        this.setState({data: resJson, searchedData: resJson});
         this.setState({refreshing: false});
       })
       .catch(e => console.log(e));
   }
   renderItemComponent = ({item}) => {
-    console.log('item', item);
     return (
       <View style={a.flatlist_view1sty}>
         <Text style={a.flatlist_text1sty}>{item.name}</Text>
@@ -86,15 +87,20 @@ export default class Router extends Component {
   //   );
   // }
 
+  searchData = ({nativeEvent: {text}}) => {
+    let filteredData = this.state.data?.filter(item => item?.name.toLowerCase()?.includes(text?.toLowerCase()));
+    this.setState({
+      searchedData: filteredData
+    })
+  }
 
   Detailslistgridview = () => {
     return (
       <SafeAreaView>
-        {console.log('detailslistview', this.state.data)}
         <FlatList
           key={'list'}
           numColumns={2}
-          data={this.state.data}
+          data={this.state.searchedData}
           renderItem={item => this.renderItemComponent(item)}
           keyExtractor={item => item.id.toString()}
           refreshing={this.state.refreshing}
@@ -108,10 +114,9 @@ export default class Router extends Component {
     console.log('Detailslistsview')
     return (
       <SafeAreaView>
-        {console.log('detailslistview', this.state.data)}
         <FlatList
           key={'gridList'}
-          data={this.state.data}
+          data={this.state.searchedData}
           renderItem={item => this.renderItemComponent(item)}
           keyExtractor={item => item.id.toString()}
           refreshing={this.state.refreshing}
@@ -125,6 +130,15 @@ export default class Router extends Component {
     console.log('presslist', this.state.data);
     return (
       <View style={a.viewwsty}>
+        <View style={{width:'100%', height: 70, padding: 10}}>
+          <TextInput
+            placeholder='Search data...'
+            value={this.state.searchText}
+            onChangeText={text => this.setState({ searchText: text })}
+            style={{ borderWidth: 1, borderColor: 'black', paddingLeft: 10 }} 
+            onSubmitEditing={(t) => this.searchData(t)}
+            />
+        </View>
         <View style={a.viewsty}>
 
           <TouchableOpacity style={a.to1}>
