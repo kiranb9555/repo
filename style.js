@@ -11,18 +11,18 @@ const a = StyleSheet.create({
      flex:1,
    },
 
-   to1:{height: 100,width:'50%'},
+   to1:{height: 50,width:'50%'},
    to2:{height: 100,width:'50%'},
   viewsty: {
   flexDirection:'row'
   },
 
   flatlist_List_view1sty:{
-    width: '85%',
+    width: '80%',
     backgroundColor: '#eee',
     elevation: 2,
     marginHorizontal: '5%',
-    marginVertical: 15,
+    marginVertical: 12,
     padding: 5,
   },
   flatlist_view1sty: {
@@ -30,7 +30,7 @@ const a = StyleSheet.create({
     backgroundColor: '#eee',
     elevation: 2,
     marginHorizontal: '5%',
-    marginVertical: 15,
+    marginVertical: 12,
     padding: 5,
   },
   flatlist_text1sty: {

@@ -176,8 +176,9 @@ export default class Router extends Component {
             />
           </TouchableOpacity>
         </View>
-        
+        <View style={{marginTop:-60}}>
         {this.state.presslist ? this.Detailslistsview()  : this.Detailslistgridview() }
+        </View>
       </View>
     );
   }
