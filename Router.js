@@ -50,12 +50,30 @@ export default class Router extends Component {
     fetch('https://gorest.co.in/public/v2/users')
       .then(res => res.json())
       .then(resJson => {
+        console.log('flag',resJson);
         this.setState({data: resJson, searchedData: resJson});
         this.setState({refreshing: false});
       })
       .catch(e => console.log(e));
   }
-  renderItemComponent = ({item}) => {
+  renderItemComponentList = ({item}) => {
+    return (
+      <View style={a.flatlist_List_view1sty}>
+        <Text style={a.flatlist_text1sty}>{item.name}</Text>
+        <View style={a.flatlist_view2sty}>
+          <Text style={a.flatlist_text2sty}>{item.email}</Text>
+          <Text style={a.flatlist_text3sty}>{item.gender}</Text>
+        </View>
+        <View style={a.flatlist_view3sty}>
+          <Text style={a.flatlist_text4sty}>{item.status}</Text>
+        </View>
+
+        <Text style={a.flatlist_text5sty}>{item.id}</Text>
+      </View>
+    );
+  };
+
+  renderItemComponentGrid = ({item}) => {
     return (
       <View style={a.flatlist_view1sty}>
         <Text style={a.flatlist_text1sty}>{item.name}</Text>
@@ -88,6 +106,7 @@ export default class Router extends Component {
   // }
 
   searchData = ({nativeEvent: {text}}) => {
+    console.log('text',text);
     let filteredData = this.state.data?.filter(item => item?.name.toLowerCase()?.includes(text?.toLowerCase()));
     this.setState({
       searchedData: filteredData
@@ -96,33 +115,33 @@ export default class Router extends Component {
 
   Detailslistgridview = () => {
     return (
-      <SafeAreaView>
+ 
         <FlatList
           key={'list'}
           numColumns={2}
           data={this.state.searchedData}
-          renderItem={item => this.renderItemComponent(item)}
+          renderItem={item => this.renderItemComponentGrid(item)}
           keyExtractor={item => item.id.toString()}
           refreshing={this.state.refreshing}
           // onRefresh={this.handleRefresh}
         />
-      </SafeAreaView>
+     
     );
   };
 
   Detailslistsview = () => {
     console.log('Detailslistsview')
     return (
-      <SafeAreaView>
+      
         <FlatList
           key={'gridList'}
           data={this.state.searchedData}
-          renderItem={item => this.renderItemComponent(item)}
+          renderItem={item => this.renderItemComponentList(item)}
           keyExtractor={item => item.id.toString()}
           refreshing={this.state.refreshing}
           // onRefresh={this.handleRefresh}
         />
-      </SafeAreaView>
+      
     );
   };
 

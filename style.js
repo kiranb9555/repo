@@ -17,13 +17,21 @@ const a = StyleSheet.create({
   flexDirection:'row'
   },
 
+  flatlist_List_view1sty:{
+    width: '85%',
+    backgroundColor: '#eee',
+    elevation: 2,
+    marginHorizontal: '5%',
+    marginVertical: 15,
+    padding: 5,
+  },
   flatlist_view1sty: {
     width: '40%',
     backgroundColor: '#eee',
     elevation: 2,
     marginHorizontal: '5%',
-    marginVertical: '3%',
-    padding: '2%',
+    marginVertical: 15,
+    padding: 5,
   },
   flatlist_text1sty: {
     color: '#333',
