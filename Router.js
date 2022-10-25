@@ -1,36 +1,16 @@
-//task1
-// import { NavigationContainer } from '@react-navigation/native';
-// import { createNativeStackNavigator } from '@react-navigation/native-stack';
-// import React from 'react'
-// import Details from './src/screens/Details';
-
-// const Router = (props) => {
-//     const Stack = createNativeStackNavigator();
-
-//   return (
-//     <NavigationContainer>
-//       <Stack.Navigator initialRouteName='Details'>
-//         <Stack.Screen name="Details" component={Details} options={{title:'details',headerShown:false}}/>
-
-//       </Stack.Navigator>
-//     </NavigationContainer>
-//   )
-// }
-
-// export default Router
-
-import a from './style';
-import {View, Button, TextInput} from 'react-native';
+import React, { Component } from 'react';
 import {
-  StyleSheet,
-  SafeAreaView,
   FlatList,
+  View,
+  TextInput,
   Text,
-  TouchableOpacity,
+  Animated,
+  Pressable,
+  Dimensions
 } from 'react-native';
+import a from './style';
 
-import React, {Component} from 'react';
-
+const ScreenWidth = Dimensions.get('screen').width;
 export default class Router extends Component {
   constructor(props) {
     super(props);
@@ -39,24 +19,24 @@ export default class Router extends Component {
       searchedData: [],
       refreshing: true,
       presslist: true,
-      searchText: ''
+      searchText: '',
+      slideAnim: new Animated.Value(0)
     };
   }
   componentDidMount() {
     this.fetchCats();
   }
   fetchCats() {
-    this.setState({refreshing: true});
+    this.setState({ refreshing: true });
     fetch('https://gorest.co.in/public/v2/users')
       .then(res => res.json())
       .then(resJson => {
-        console.log('flag',resJson);
-        this.setState({data: resJson, searchedData: resJson});
-        this.setState({refreshing: false});
+        this.setState({ data: resJson, searchedData: resJson });
+        this.setState({ refreshing: false });
       })
       .catch(e => console.log(e));
   }
-  renderItemComponentList = ({item}) => {
+  renderItemComponentList = ({ item }) => {
     return (
       <View style={a.flatlist_List_view1sty}>
         <Text style={a.flatlist_text1sty}>{item.name}</Text>
@@ -73,7 +53,7 @@ export default class Router extends Component {
     );
   };
 
-  renderItemComponentGrid = ({item}) => {
+  renderItemComponentGrid = ({ item }) => {
     return (
       <View style={a.flatlist_view1sty}>
         <Text style={a.flatlist_text1sty}>{item.name}</Text>
@@ -90,23 +70,7 @@ export default class Router extends Component {
     );
   };
 
-  // detailslistview() {
-  //   return (
-  //     <SafeAreaView>
-  //       <FlatList
-  //         numColumns={!presslist ? 2: null}
-  //         data={this.state.data}
-  //         renderItem={item => this.renderItemComponent(item)}
-  //         keyExtractor={item => item.id.toString()}
-  //         refreshing={this.state.refreshing}
-  //         onRefresh={this.handleRefresh}
-  //       />
-  //     </SafeAreaView>
-  //   );
-  // }
-
-  searchData = ({nativeEvent: {text}}) => {
-    console.log('text',text);
+  searchData = ({ nativeEvent: { text } }) => {
     let filteredData = this.state.data?.filter(item => item?.name.toLowerCase()?.includes(text?.toLowerCase()));
     this.setState({
       searchedData: filteredData
@@ -115,192 +79,77 @@ export default class Router extends Component {
 
   Detailslistgridview = () => {
     return (
- 
-        <FlatList
-          key={'list'}
-          numColumns={2}
-          data={this.state.searchedData}
-          renderItem={item => this.renderItemComponentGrid(item)}
-          keyExtractor={item => item.id.toString()}
-          refreshing={this.state.refreshing}
-          // onRefresh={this.handleRefresh}
-        />
-     
+
+      <FlatList
+        key={'list'}
+        numColumns={2}
+        data={this.state.searchedData}
+        renderItem={item => this.renderItemComponentGrid(item)}
+        keyExtractor={item => item.id.toString()}
+        refreshing={this.state.refreshing}
+      />
+
     );
   };
 
   Detailslistsview = () => {
-    console.log('Detailslistsview')
     return (
-      
-        <FlatList
-          key={'gridList'}
-          data={this.state.searchedData}
-          renderItem={item => this.renderItemComponentList(item)}
-          keyExtractor={item => item.id.toString()}
-          refreshing={this.state.refreshing}
-          // onRefresh={this.handleRefresh}
-        />
-      
+      <FlatList
+        key={'gridList'}
+        data={this.state.searchedData}
+        renderItem={item => this.renderItemComponentList(item)}
+        keyExtractor={item => item.id.toString()}
+        refreshing={this.state.refreshing}
+      />
+
     );
   };
 
+  firstPress = () => {
+    Animated.timing(this.state.slideAnim, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true
+    }).start();
+    this.setState({ presslist: true });
+  }
+ 
+  secondPress = () => {
+    Animated.timing(this.state.slideAnim, {
+      toValue: ScreenWidth/2,
+      duration: 300,
+      useNativeDriver: true
+    }).start();
+    this.setState({ presslist: false });
+  }
+
   render() {
-    console.log('presslist', this.state.data);
     return (
       <View style={a.viewwsty}>
-        <View style={{width:'100%', height: 70, padding: 10}}>
+        <View style={{ width: '100%', height: 70, padding: 10 }}>
           <TextInput
             placeholder='Search data...'
             value={this.state.searchText}
             onChangeText={text => this.setState({ searchText: text })}
-            style={{ borderWidth: 1, borderColor: 'black', paddingLeft: 10 }} 
+            style={{ borderWidth: 1, borderColor: 'black', paddingLeft: 10 }}
             onSubmitEditing={(t) => this.searchData(t)}
-            />
+          />
         </View>
         <View style={a.viewsty}>
-
-          <TouchableOpacity style={a.to1}>
-            
-            <Button
-              style={a.button1sty}
-              title="detailslistview"
-              onPress={()=>  this.setState({presslist: true})}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={a.to2}>
-            <Button
-              style={a.button2sty}
-              title="detailsgridview"
-              onPress={()=>  this.setState({presslist: false})}
-            />
-          </TouchableOpacity>
+          <Pressable android_ripple={{ color: 'rgba(0, 0, 0, 0.1)' }} style={a.to1}
+            onPress={this.firstPress}
+          >
+            <Text style={a.buttonText}>DETAILSLISTVIEW</Text>
+          </Pressable>
+          <Pressable android_ripple={{ color: 'rgba(0, 0, 0, 0.1)' }} style={a.to1}
+            onPress={this.secondPress}
+          >
+            <Text style={a.buttonText}>DETAILSGRIDVIEW</Text>
+          </Pressable>
         </View>
-        
-        {this.state.presslist ? this.Detailslistsview()  : this.Detailslistgridview() }
+        <Animated.View style={[a.bottomBar, {transform: [{translateX: this.state.slideAnim}] }]} />
+        {this.state.presslist ? this.Detailslistsview() : this.Detailslistgridview()}
       </View>
     );
   }
 }
-
-// // import React, { useEffect } from "react";
-// import { View, Text, FlatList, TouchableOpacity } from 'react-native';
-// import axios from "axios";
-
-//  import React, { Component } from 'react'
-
-//  export class Details extends Component {
-// constructor(props){
-//   super(props);
-
-// }
-
-//     componentDidMount(){
-
-//     // ApiCall()https://gorest.co.in/public/v2/users https://api.publicapis.org/entries
-
-// //      axios.get('https://gorest.co.in/public/v2/users').then((response)=>{
-// //       console.log("API Data===>", response)
-// //     }
-
-// //  renderItem  ({item}) {
-// //   console.log("items==<value>",item)
-// //   return (
-
-// //     <View style={{ backgroundColor:'#eee',elevation:2,marginHorizontal:'10%',marginVertical:'3%',padding:'2%' }}>
-// //     <Text style={{color:'#333',fontSize:20,fontWeight:"bold",marginBottom:'1%'}}>
-// //        {item.name}</Text>
-
-// //       <View style={{flexDirection:'row',justifyContent:'space-around'}}>
-// //       <Text style={{color:'#333'}}>
-// //        {item.startdate}</Text>
-// //        <Text style={{color:'#333'}}>
-// //        {item.enddate}</Text>
-// //       </View>
-
-// //       <View style={{padding:'2%',backgroundColor:'#456456',width:'30%',margin:'5%',justifyContent:'center',alignItems:'center'
-// //     }}>
-
-// //       <Text style={{color:'#333'}}>
-// //        {item.class}</Text>
-// //       </View>
-
-// //       <View style={{borderBottomWidth:1,width:'100%',marginVertical:'1%'}}></View>
-// //      <TouchableOpacity >
-
-// //      <Text style={{color:'#123456'}}>
-// //      {item.event}</Text>
-// //       </TouchableOpacity>
-
-// //        </View>
-// //        )
-
-// //   }
-// //   render() {
-
-// //     return (<View>
-// //       <Text>
-// //         Short Term Plan
-// //       </Text>
-
-// //       <View>
-// //         <FlatList
-
-// //           data={DATA}
-// //           renderItem={renderItem}
-// //           keyExtractor={item => item.id}
-// //         />
-
-// //       </View>
-// //     </View>
-
-// //     )
-// //   }
-// // }
-
-// // // const ApiCall = () => {
-// // //   axios
-// // //   .get('https://gorest.co.in/public/v2/users')
-// // //   .then((response) => console.log("Hello"))
-// // // }
-
-// import React, {Component} from 'react';
-// import {Platform, StyleSheet, Text, View, FlatList} from 'react-native';
-
-// export default class App extends Component {
-
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       dataSource:[]
-//      };
-//    }
-
-//   componentDidMount(){
-//     fetch("https://gorest.co.in/public/v2/users")
-//     .then(response => response.json())
-//     .then((responseJson)=> {
-//       this.setState({
-//        dataSource: responseJson
-//       })
-//     })
-//     .catch(error=>console.log(error)) //to catch the errors if any
-//     }
-
-//     render(){
-//      return(
-//       <View style={{padding:10}}>
-//       <FlatList
-//       padding ={30}
-//          data={this.state.dataSource}
-//          renderItem={({item}) =>
-//          <View style={{height: 50}}>
-//          <Text style={{height: 50}}>{item.title}</Text>
-//          <View style={{height: 1,backgroundColor:'gray'}}></View>
-//          </View>
-//         }
-//        />
-
-//      </View>
-//      )}
-// }
