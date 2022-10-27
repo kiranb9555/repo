@@ -41,7 +41,44 @@ export default class Router extends Component {
         this.setState({ refreshing: false });
         this.db.transaction(function(txn){
 
-          txn.executeSql()
+        
+          this.db.transaction(function (txn) {
+            txn.executeSql(
+              "SELECT name FROM sqlite_master WHERE type='table' AND name='table_user'",
+              [],
+              function (tx, res) {
+                console.log('item:', res.rows.length);
+                if (res.rows.length == 0) {
+                  txn.executeSql('DROP TABLE IF EXISTS table_user', []);
+                  txn.executeSql(
+                    'CREATE TABLE IF NOT EXISTS table_user(user_id INTEGER PRIMARY KEY AUTOINCREMENT, user_name VARCHAR(40),user_email VARCHAR(40), user_gender  VARCHAR(40), user_status VARCHAR(6),user_id INT(4))',
+                    [],
+                  );
+                  txn.executeSql('DROP TABLE IF EXISTS table_user', []);
+                  tx.executeSql(
+                    'INSERT INTO table_user (user_name, user_contact, user_address) VALUES (?,?,?)',
+                    [userName, userContact, userAddress],
+                    (tx, results) => {
+                      console.log('Results', results.rowsAffected);
+                      if (results.rowsAffected > 0) {
+                        Alert.alert(
+                          'Success',
+                          'data added Successfully',
+                          [
+                            {
+                              text: 'Ok',
+                              
+                            },
+                          ],
+                          {cancelable: false},
+                        );
+                      } else alert('data addition Failed');
+                    },
+                  );
+                }
+              },
+            );
+          });
         })
       })
       .catch(e => console.log(e));
