@@ -15,13 +15,9 @@ import a from './style';
 const ScreenWidth = Dimensions.get('screen').width;
 export default class Router extends Component {
   constructor(props) {
-    super(props);
-    var db=openDatabase({name:userDatabase.db});
-    
+    super(props);    
     this.state = {
       data: [],
-      // searchedDataList: [],
-      // searchedDataGrid: [],
       searchedDataListandGrid: [],
       refreshing: true,
       presslist: true,
@@ -29,57 +25,133 @@ export default class Router extends Component {
       slideAnim: new Animated.Value(0)
     };
   }
+
+  errorCB(err) {
+    console.log("SQL Error: " + err);
+  }
+
+  successCB() {
+    console.log("SQL executed fine");
+  }
+  
+  openCB() {
+    console.log("Database OPENED");
+  }
+
+  // db = openDatabase("UserDatabase.db", "1.0", "Test Database", 200000, this.openCB, this.errorCB);
+  // db = openDatabase({ name: 'UserDatabase.db' });
+  db = openDatabase(
+    {
+      name: 'SQLite',
+      location: 'default',
+      createFromLocation: '~SQLite.db',
+    },
+    () => { },
+    error => {
+      console.log("ERROR: " + error);
+    }
+  );
+
   componentDidMount() {
     this.fetchCats();
+    this.getFromDB();
   }
+
+  getFromDB = () => {
+    this.db.transaction(function (txn) {
+      console.log('fire',txn);
+      txn.fn(
+        "SELECT * FROM table_user",
+        [],
+        function (tx, res) {
+          console.log('item:');
+          if (res.rows.length == 0) {
+            txn.executeSql(
+              'CREATE TABLE IF NOT EXISTS table_user(id INTEGER PRIMARY KEY AUTOINCREMENT, email VARCHAR(20), gender VARCHAR(20), name VARCHAR(20), status VARCHAR(20))',
+              []
+            );
+          }
+        }
+      )
+    });
+  }
+
+  addDataInDataBase = (data) => {
+    data?.forEach(item => {
+      this.db.transaction(function (tx) {
+        // console.log('tx', tx)
+        tx.executeSql(
+            'INSERT INTO table_user (email, gender, name, id, status) VALUES (?,?,?,?,?)',
+            [item.email, item.gender, item.name, item.id, item.status],
+            (tx, results) => {
+                // console.log('Results', results);
+                if (results.rowsAffected > 0) {
+                    Alert.alert(
+                        'Success',
+                        'You are data are successfully added in our database.',
+                        [
+                            {
+                                text: 'Ok',
+                                // onPress: () => navigation.navigate('HomeScreen'),
+                            },
+                        ],
+                        { cancelable: false }
+                    );
+                } else alert('Data storage Failed');
+            }
+        );
+    })
+    })
+  }
+
   fetchCats() {
     this.setState({ refreshing: true });
     fetch('https://gorest.co.in/public/v2/users')
       .then(res => res.json())
       .then(resJson => {
+        // console.log('resJson', resJson?.length>0);
         this.setState({ data: resJson, searchedDataList: resJson, searchedDataGrid: resJson });
         this.setState({ refreshing: false });
-        this.db.transaction(function(txn){
-
-        
-          this.db.transaction(function (txn) {
-            txn.executeSql(
-              "SELECT name FROM sqlite_master WHERE type='table' AND name='table_user'",
-              [],
-              function (tx, res) {
-                console.log('item:', res.rows.length);
-                if (res.rows.length == 0) {
-                  txn.executeSql('DROP TABLE IF EXISTS table_user', []);
-                  txn.executeSql(
-                    'CREATE TABLE IF NOT EXISTS table_user(user_id INTEGER PRIMARY KEY AUTOINCREMENT, user_name VARCHAR(40),user_email VARCHAR(40), user_gender  VARCHAR(40), user_status VARCHAR(6),user_id INT(4))',
-                    [],
-                  );
-                  txn.executeSql('DROP TABLE IF EXISTS table_user', []);
-                  tx.executeSql(
-                    'INSERT INTO table_user (user_name, user_contact, user_address) VALUES (?,?,?)',
-                    [userName, userContact, userAddress],
-                    (tx, results) => {
-                      console.log('Results', results.rowsAffected);
-                      if (results.rowsAffected > 0) {
-                        Alert.alert(
-                          'Success',
-                          'data added Successfully',
-                          [
-                            {
-                              text: 'Ok',
+        resJson?.length > 0 && this.addDataInDataBase(resJson)
+        // this.db.transaction(function(txn){
+        //   this.db.transaction(function (txn) {
+        //     txn.executeSql(
+        //       'INSERT INTO table_user (email, gender, id, names, status) VALUES (?,?,?)',
+        //       [email, gender, id, names, status],
+        //       function (tx, res) {
+        //         console.log('item:', res.rows.length);
+        //         if (res.rows.length == 0) {
+        //           txn.executeSql('DROP TABLE IF EXISTS table_user', []);
+        //           txn.executeSql(
+        //             'CREATE TABLE IF NOT EXISTS table_user(user_id INTEGER PRIMARY KEY AUTOINCREMENT, user_name VARCHAR(40),user_email VARCHAR(40), user_gender  VARCHAR(40), user_status VARCHAR(6),user_id INT(4))',
+        //             [],
+        //           );
+        //           txn.executeSql('DROP TABLE IF EXISTS table_user', []);
+        //           tx.executeSql(
+        //             'INSERT INTO table_user (user_name, user_contact, user_address) VALUES (?,?,?)',
+        //             [userName, userContact, userAddress],
+        //             (tx, results) => {
+        //               console.log('Results', results.rowsAffected);
+        //               if (results.rowsAffected > 0) {
+        //                 Alert.alert(
+        //                   'Success',
+        //                   'data added Successfully',
+        //                   [
+        //                     {
+        //                       text: 'Ok',
                               
-                            },
-                          ],
-                          {cancelable: false},
-                        );
-                      } else alert('data addition Failed');
-                    },
-                  );
-                }
-              },
-            );
-          });
-        })
+        //                     },
+        //                   ],
+        //                   {cancelable: false},
+        //                 );
+        //               } else alert('data addition Failed');
+        //             },
+        //           );
+        //         }
+        //       },
+        //     );
+        //   });
+        // })
       })
       .catch(e => console.log(e));
   }
@@ -219,6 +291,18 @@ secondPress = () => {
   this.setState({ presslist: false });
   this.setState({searchedDataListandGrid:this.state.data});
   this.setState({ searchText: '' });
+  this.db.transaction((tx) => {
+    // console.log('tx', tx)
+    tx.executeSql(
+      'Select * From table_user',
+      [],
+      (tx, results) => {
+        console.log('results ro', results.rowsAffected)
+        // var temp = [];
+
+      }
+      )
+  })
 }
 
 render() {
