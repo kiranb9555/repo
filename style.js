@@ -17,11 +17,13 @@ const a = StyleSheet.create({
     padding: 15
   },
   viewsty: {
-    flexDirection: 'row'
+   
+    flexDirection: 'row' ,backgroundColor:'green',marginTop: 5,
+    padding: 2,marginRight:20,marginLeft:20,
   },
 
   flatlist_List_view1sty: {
-    width: '85%',
+    width: '90%',
     backgroundColor: '#eee',
     elevation: 2,
     marginHorizontal: '5%',
@@ -57,13 +59,26 @@ const a = StyleSheet.create({
     alignItems: 'center',
   },
 
-  flatlist_text4sty: { color: '#333' },
+  flatlist_text4sty: { color: '#333' ,marginBottom:4},
 
-  flatlist_text5sty: { color: '#123456' },
+  flatlist_text5sty: { color: '#123456' ,marginTop:7},
+
+  buttonText:{
+    color:'white',
+    fontSize:15,
+fontWeight:'400'
+  },
   bottomBar: {
-    backgroundColor: 'black', 
-    width: '50%',
-    height: 2
+    
+    marginRight:20,
+  marginBottom:12,
+    backgroundColor: 'pink', 
+    width: '45%',
+    height: 4
+  },
+  animatedview:{
+
+  marginHorizontal:20,
   }
 });
 
