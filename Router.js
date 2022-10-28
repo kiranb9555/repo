@@ -102,7 +102,7 @@ export default class Router extends Component {
         "gender": "male",
         "status": "active"
     }
-  ]
+  ];
       
     
   }
@@ -137,6 +137,7 @@ export default class Router extends Component {
       createFromLocation: '~SQLite.db',
     },
     () => { },
+
     error => {
       console.log("ERROR: " + error);
     }
@@ -148,13 +149,14 @@ export default class Router extends Component {
   }
 
   addDataInDataBase = async (data) => {
+    // let Deletetable = await this.ExecuteQuery('DELETE FROM users',[]);
     for (let i = 0; i < data.length; ++i) {
       let item = data[i];
-      let Deletetable = await this.ExecuteQuery("DELETE FROM users",[]);
+      
       
       let singleInsert = await this.ExecuteQuery("INSERT INTO users (id, email, gender, name, status) VALUES ( ?, ?, ?, ?, ? )", [item.id, item.email, item.gender, item.name, item.status]);
-      
-      let data = await this.ExecuteQuery('SELECT * FROM users', []);
+    }
+       this.data = await this.ExecuteQuery('SELECT * FROM users', []);
        var rows = data.rows;
        let fullData = [];
      
@@ -162,7 +164,12 @@ export default class Router extends Component {
          var itemsave = rows.item(i);
         fullData.push(itemsave);
        }
-    }
+       if (fullData?.length > 0) 
+        this.setState({ data: fullData, searchedDataList: fullData, searchedDataGrid: fullData, searchedDataListandGrid: fullData });
+        // return false;
+      
+      
+    
     // // data?.forEach(item => {
     // //   let singleInsert = await this.ExecuteQuery("INSERT INTO users (id, email, gender, name, status) VALUES ( ?, ?, ?, ?, ? )", [item.id, item.email, item.gender, item.name, item.status]);
     // // })
@@ -189,10 +196,10 @@ export default class Router extends Component {
     // console.log('multipleInsert');
   }
 
-  async DeleteQuery(id) {
-    let deleteQuery = await this.ExecuteQuery('DELETE FROM users WHERE id = ?', [id]);
-    console.log('deleteQuery', deleteQuery)
-  }
+  // async DeleteQuery(id) {
+  //   let deleteQuery = await this.ExecuteQuery('DELETE FROM users WHERE id = ?', [id]);
+  //   console.log('deleteQuery', deleteQuery);
+  // }
 
 
   getData = async () => {
@@ -225,21 +232,21 @@ export default class Router extends Component {
     //   fullData.push(item);
     // }
     console.log('fullData', fullData);
-    if (fullData?.length > 0) {
-      this.setState({ data: fullData, searchedDataList: fullData, searchedDataGrid: fullData, searchedDataListandGrid: fullData });
-      return false;
-     } else {
-    //  this.addDataInDataBase(resJson);
-console.log("error");
-     }
+//     if (fullData?.length > 0) {
+//       this.setState({ data: fullData, searchedDataList: fullData, searchedDataGrid: fullData, searchedDataListandGrid: fullData });
+//       return false;
+//      } else {
+//     //  this.addDataInDataBase(resJson);
+// console.log("error");
+//      }
   }
 
-  fetchCats() {
+  fetchCats(){
     this.setState({ refreshing: true });
     fetch('https://gorest.co.in/public/v2/users')
       .then(res => res.json())
       .then(resJson => {
-        this.setState({ data: resJson, searchedDataList: resJson, searchedDataGrid: resJson, searchedDataListandGrid: resJson, refreshing: false });
+        this.setState({ data: resJson, searchedDataList: resJson, searchedDataGrid: resJson, searchedDataListandGrid: obj, refreshing: false });
         resJson?.length > 0 && this.addData(obj)
       })
       .catch(e => {
