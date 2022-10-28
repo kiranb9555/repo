@@ -13,6 +13,107 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import a from './style';
 
 const ScreenWidth = Dimensions.get('screen').width;
+
+const DATA = [
+  {
+      "id": 4195,
+      "name": "Verdhman Shree",
+      "email": "verdh@am.com",
+      "gender": "female",
+      "status": "active"
+  },
+  {
+      "id": 4193,
+      "name": "Gautam Rana II",
+      "email": "rana_ii_gautam@funk.biz",
+      "gender": "female",
+      "status": "active"
+  },
+  {
+      "id": 4192,
+      "name": "Pran Mehra",
+      "email": "mehra_pran@leannon-spinka.org",
+      "gender": "male",
+      "status": "inactive"
+  },
+  {
+      "id": 4191,
+      "name": "Paramartha Mukhopadhyay",
+      "email": "mukhopadhyay_paramartha@beier.name",
+      "gender": "male",
+      "status": "inactive"
+  },
+  {
+      "id": 4190,
+      "name": "Sudeva Dhawan",
+      "email": "sudeva_dhawan@rutherford.name",
+      "gender": "male",
+      "status": "inactive"
+  },
+  {
+      "id": 4189,
+      "name": "Chakravartee Ganaka",
+      "email": "chakravartee_ganaka@beahan-shields.name",
+      "gender": "female",
+      "status": "inactive"
+  },
+  {
+      "id": 4188,
+      "name": "Gov. Sujata Singh",
+      "email": "singh_gov_sujata@kovacek.net",
+      "gender": "female",
+      "status": "inactive"
+  },
+  {
+      "id": 4187,
+      "name": "Mohan Patel",
+      "email": "patel_mohan@fay-dach.com",
+      "gender": "male",
+      "status": "active"
+  },
+  {
+      "id": 4186,
+      "name": "Trilokesh Trivedi",
+      "email": "trilokesh_trivedi@keeling-beer.org",
+      "gender": "male",
+      "status": "inactive"
+  },
+  {
+      "id": 4185,
+      "name": "Chidananda Nair",
+      "email": "chidananda_nair@fadel.co",
+      "gender": "female",
+      "status": "active"
+  },
+  {
+    "id": 4184,
+    "name": "yadav Nair",
+    "email": "yadav Nair@fadel.co",
+    "gender": "male",
+    "status": "active"
+}
+];
+
+const isSameUser = (a, b) => a.id == b.id;
+
+const onlyInLeft = (left, right) => 
+  left.filter(leftValue =>
+    !right.some(rightValue => 
+      isSameUser(leftValue, rightValue)));
+
+// const onlyIn = (left, right) => {
+//   console.log('right', right);
+//   let data = left?.filter(item => {
+//     let obj = right.find(val => val.id === item.id);
+//     console.log('obj-->', obj);
+//     if(obj){
+//       return false
+//     } else {
+//       return true
+//     }
+//   });
+//   console.log('datga', data);
+// }
 export default class Router extends Component {
   constructor(props) {
     super(props);
@@ -24,85 +125,6 @@ export default class Router extends Component {
       searchText: '',
       slideAnim: new Animated.Value(0)
     };
-    var obj =[
-      {
-          "id": 4194,
-          "name": "Bhoopati Varman I",
-          "email": "i_varman_bhoopati@buckridge-jones.com",
-          "gender": "female",
-          "status": "active"
-      },
-      {
-          "id": 4193,
-          "name": "Gautam Rana II",
-          "email": "rana_ii_gautam@funk.biz",
-          "gender": "female",
-          "status": "active"
-      },
-      {
-          "id": 4192,
-          "name": "Pran Mehra",
-          "email": "mehra_pran@leannon-spinka.org",
-          "gender": "male",
-          "status": "inactive"
-      },
-      {
-          "id": 4191,
-          "name": "Paramartha Mukhopadhyay",
-          "email": "mukhopadhyay_paramartha@beier.name",
-          "gender": "male",
-          "status": "inactive"
-      },
-      {
-          "id": 4190,
-          "name": "Sudeva Dhawan",
-          "email": "sudeva_dhawan@rutherford.name",
-          "gender": "male",
-          "status": "inactive"
-      },
-      {
-          "id": 4189,
-          "name": "Chakravartee Ganaka",
-          "email": "chakravartee_ganaka@beahan-shields.name",
-          "gender": "female",
-          "status": "inactive"
-      },
-      {
-          "id": 4188,
-          "name": "Gov. Sujata Singh",
-          "email": "singh_gov_sujata@kovacek.net",
-          "gender": "female",
-          "status": "inactive"
-      },
-      {
-          "id": 4187,
-          "name": "Mohan Patel",
-          "email": "patel_mohan@fay-dach.com",
-          "gender": "male",
-          "status": "active"
-      },
-      {
-          "id": 4186,
-          "name": "Trilokesh Trivedi",
-          "email": "trilokesh_trivedi@keeling-beer.org",
-          "gender": "male",
-          "status": "inactive"
-      },
-      {
-          "id": 4185,
-          "name": "Chidananda Nair",
-          "email": "chidananda_nair@fadel.co",
-          "gender": "female",
-          "status": "active"
-      },
-      {
-        "id": 4184,
-        "name": "yadav Nair",
-        "email": "yadav Nair@fadel.co",
-        "gender": "male",
-        "status": "active"
-    }
-  ];
       
     
   }
@@ -150,7 +172,7 @@ export default class Router extends Component {
 
   addDataInDataBase = async (data) => {
     // let Deletetable = await this.ExecuteQuery('DELETE FROM users',[]);
-    for (let i = 0; i < data.length; ++i) {
+    for (let i = 0; i < data?.length; ++i) {
       let item = data[i];
       
       
@@ -160,7 +182,7 @@ export default class Router extends Component {
        var rows = data.rows;
        let fullData = [];
      
-      for (let i = 0; i < rows.length; i++) {
+      for (let i = 0; i < rows?.length; i++) {
          var itemsave = rows.item(i);
         fullData.push(itemsave);
        }
@@ -206,17 +228,26 @@ export default class Router extends Component {
     let data = await this.ExecuteQuery('SELECT * FROM users', []);
     var rows = data.rows;
     let fullData = [];
-    for (let i = 0; i < rows.length; i++) {
+    for (let i = 0; i < rows?.length; i++) {
       var item = rows.item(i);
       console.log("item from row item(i)_____________", item);
       fullData.push(item);
       console.log(this.state.fullData);
     }
-
-    if (fullData?.length > 0) {
-      this.setState({ data: fullData, searchedDataList: fullData, searchedDataGrid: fullData, searchedDataListandGrid: fullData });
-      return false;
+    if (fullData?.length > 0) {      
+      return fullData;
+    } else {
+      return []
     }
+  }
+
+  async DeleteQuery(id){
+    let deleteQuery = await this.ExecuteQuery('DELETE FROM users WHERE id = ?', [id]);
+    console.log(deleteQuery);
+  }
+
+  deleteRow = (data) => {
+    data.forEach(item => this.DeleteQuery(item.id));
   }
 
   addData = async (resJson) => {
@@ -231,7 +262,7 @@ export default class Router extends Component {
     //   var item = rows.item(i);
     //   fullData.push(item);
     // }
-    console.log('fullData', fullData);
+    // console.log('fullData', fullData);
 //     if (fullData?.length > 0) {
 //       this.setState({ data: fullData, searchedDataList: fullData, searchedDataGrid: fullData, searchedDataListandGrid: fullData });
 //       return false;
@@ -242,16 +273,38 @@ export default class Router extends Component {
   }
 
   fetchCats(){
-    this.setState({ refreshing: true });
-    fetch('https://gorest.co.in/public/v2/users')
-      .then(res => res.json())
-      .then(resJson => {
-        this.setState({ data: resJson, searchedDataList: resJson, searchedDataGrid: resJson, searchedDataListandGrid: obj, refreshing: false });
-        resJson?.length > 0 && this.addData(obj)
-      })
-      .catch(e => {
-        this.getData();
+    // if(DATA?.length > 0){
+    //   this.setState({ data: DATA, searchedDataList: DATA, searchedDataGrid: DATA, searchedDataListandGrid: DATA, refreshing: false });
+    //   DATA?.length > 0 && this.addData(DATA);
+    // } else {
+      this.getData().then(res => {
+        if(res){
+          this.setState({ data: res, searchedDataList: res, searchedDataGrid: res, searchedDataListandGrid: res });
+          let leftData = onlyInLeft(DATA, res, isSameUser);
+          let resLeftData = onlyInLeft(res, DATA, isSameUser);
+          if(leftData?.length > 0){
+            this.addDataInDataBase(leftData);
+          } 
+          if(resLeftData?.length > 0){
+            this.deleteRow(resLeftData)
+          }
+          // console.log('dddddd', newData)
+          // if(onlyInLeft)
+          // this.setState({ data: res, searchedDataList: res, searchedDataGrid: res, searchedDataListandGrid: res });
+        }
       });
+    // }
+
+    // this.setState({ refreshing: true });
+    // fetch('https://gorest.co.in/public/v2/users')
+    //   .then(res => res.json())
+    //   .then(resJson => {
+    //     this.setState({ data: resJson, searchedDataList: resJson, searchedDataGrid: resJson, searchedDataListandGrid: obj, refreshing: false });
+    //     resJson?.length > 0 && this.addData(obj)
+    //   })
+    //   .catch(e => {
+    //     this.getData();
+    //   });
   }
 
   renderItemComponentListandGrid = ({ item }) => {
@@ -282,6 +335,7 @@ export default class Router extends Component {
           key={this.state.presslist ? 'list' : 'grid'}
           numColumns={this.state.presslist ? 1 : 2}
           data={this.state.searchedDataListandGrid}
+          contentContainerStyle={{paddingBottom: 150}}
           renderItem={item => this.renderItemComponentListandGrid(item)}
           keyExtractor={item => item.id.toString()}
           refreshing={this.state.refreshing}
