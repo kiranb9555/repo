@@ -130,8 +130,8 @@ export default class Router extends Component {
   }
 
   componentDidMount() {
-    this.fetchCats();
     this.createTable();
+    this.fetchCats();
     // this.deleteTable()
   }
 
@@ -155,11 +155,10 @@ export default class Router extends Component {
   db = openDatabase(
     {
       name: 'SQLite',
-      location: 'default',
-      createFromLocation: '~SQLite.db',
+      // location: 'default',
+      // createFromLocation: '~SQLite1.db',
     },
     () => { },
-
     error => {
       console.log("ERROR: " + error);
     }
@@ -237,7 +236,7 @@ export default class Router extends Component {
     if (fullData?.length > 0) {      
       return fullData;
     } else {
-      return []
+      return DATA;
     }
   }
 
