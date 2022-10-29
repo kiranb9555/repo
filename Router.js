@@ -14,86 +14,6 @@ import a from './style';
 
 const ScreenWidth = Dimensions.get('screen').width;
 
-const DATA = [
-  {
-      "id": 4195,
-      "name": "Verdhman Shree",
-      "email": "verdh@am.com",
-      "gender": "female",
-      "status": "active"
-  },
-  {
-      "id": 4193,
-      "name": "Gautam Rana II",
-      "email": "rana_ii_gautam@funk.biz",
-      "gender": "female",
-      "status": "active"
-  },
-  {
-      "id": 4192,
-      "name": "Pran Mehra",
-      "email": "mehra_pran@leannon-spinka.org",
-      "gender": "male",
-      "status": "inactive"
-  },
-  {
-      "id": 4191,
-      "name": "Paramartha Mukhopadhyay",
-      "email": "mukhopadhyay_paramartha@beier.name",
-      "gender": "male",
-      "status": "inactive"
-  },
-  {
-      "id": 4190,
-      "name": "Sudeva Dhawan",
-      "email": "sudeva_dhawan@rutherford.name",
-      "gender": "male",
-      "status": "inactive"
-  },
-  {
-      "id": 4189,
-      "name": "Chakravartee Ganaka",
-      "email": "chakravartee_ganaka@beahan-shields.name",
-      "gender": "female",
-      "status": "inactive"
-  },
-  {
-      "id": 4188,
-      "name": "Gov. Sujata Singh",
-      "email": "singh_gov_sujata@kovacek.net",
-      "gender": "female",
-      "status": "inactive"
-  },
-  {
-      "id": 4187,
-      "name": "Mohan Patel",
-      "email": "patel_mohan@fay-dach.com",
-      "gender": "male",
-      "status": "active"
-  },
-  {
-      "id": 4186,
-      "name": "Trilokesh Trivedi",
-      "email": "trilokesh_trivedi@keeling-beer.org",
-      "gender": "male",
-      "status": "inactive"
-  },
-  {
-      "id": 4185,
-      "name": "Chidananda Nair",
-      "email": "chidananda_nair@fadel.co",
-      "gender": "female",
-      "status": "active"
-  },
-  {
-    "id": 4184,
-    "name": "yadav Nair",
-    "email": "yadav Nair@fadel.co",
-    "gender": "male",
-    "status": "active"
-}
-];
-
 const isSameUser = (a, b) => a.id == b.id;
 
 const onlyInLeft = (left, right) => 
@@ -236,7 +156,7 @@ export default class Router extends Component {
     if (fullData?.length > 0) {      
       return fullData;
     } else {
-      return DATA;
+      return [];
     }
   }
 
@@ -271,39 +191,33 @@ export default class Router extends Component {
 //      }
   }
 
-  fetchCats(){
-    // if(DATA?.length > 0){
-    //   this.setState({ data: DATA, searchedDataList: DATA, searchedDataGrid: DATA, searchedDataListandGrid: DATA, refreshing: false });
-    //   DATA?.length > 0 && this.addData(DATA);
-    // } else {
-      this.getData().then(res => {
-        if(res){
-          this.setState({ data: res, searchedDataList: res, searchedDataGrid: res, searchedDataListandGrid: res });
-          let leftData = onlyInLeft(DATA, res, isSameUser);
-          let resLeftData = onlyInLeft(res, DATA, isSameUser);
-          if(leftData?.length > 0){
-            this.addDataInDataBase(leftData);
-          } 
-          if(resLeftData?.length > 0){
-            this.deleteRow(resLeftData)
-          }
-          // console.log('dddddd', newData)
-          // if(onlyInLeft)
-          // this.setState({ data: res, searchedDataList: res, searchedDataGrid: res, searchedDataListandGrid: res });
+  manageData = (DATA) => {
+    this.getData().then(res => {
+      if(res?.length > 0){
+        this.setState({ data: res, searchedDataList: res, searchedDataGrid: res, searchedDataListandGrid: res });
+        let leftData = onlyInLeft(DATA, res, isSameUser);
+        let resLeftData = onlyInLeft(res, DATA, isSameUser);
+        if(leftData?.length > 0){
+          this.addDataInDataBase(leftData);
+        } 
+        if(resLeftData?.length > 0){
+          this.deleteRow(resLeftData)
         }
-      });
-    // }
+      } else {
+        this.addDataInDataBase(DATA);
+      }
+    });
+  }
 
-    // this.setState({ refreshing: true });
-    // fetch('https://gorest.co.in/public/v2/users')
-    //   .then(res => res.json())
-    //   .then(resJson => {
-    //     this.setState({ data: resJson, searchedDataList: resJson, searchedDataGrid: resJson, searchedDataListandGrid: obj, refreshing: false });
-    //     resJson?.length > 0 && this.addData(obj)
-    //   })
-    //   .catch(e => {
-    //     this.getData();
-    //   });
+  fetchCats(){
+    fetch('https://my-json-server.typicode.com/kiranb9555/fakeapi/usersData')
+    .then(res => res.json())
+    .then(res => {
+      this.manageData(res);
+    }).catch(e => {
+      this.manageData([]);
+      console.log('api ',e);
+    });
   }
 
   renderItemComponentListandGrid = ({ item }) => {
