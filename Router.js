@@ -46,8 +46,30 @@ export default class Router extends Component {
       slideAnim: new Animated.Value(0)
     };
       
+    // this.db = openDatabase(
+    //   {
+    //     name: 'SQ',
+    //     // location: 'default',
+    //     // createFromLocation: '~SQLite1.db',
+    //   },
+    //   // () => { },
+    //   // error => {
+    //   //   console.log("ERROR: " + error);
+    //   // }
+    // );
     
   }
+  db = openDatabase(
+    {
+      name: 'SQ',
+      // location: 'default',
+      // createFromLocation: '~SQLite1.db',
+    },
+    // () => { },
+    // error => {
+    //   console.log("ERROR: " + error);
+    // }
+  );
 
   componentDidMount() {
     this.createTable();
@@ -72,17 +94,7 @@ export default class Router extends Component {
     console.log('Table', Table)
   }
 
-  db = openDatabase(
-    {
-      name: 'SQ',
-      // location: 'default',
-      // createFromLocation: '~SQLite1.db',
-    },
-    () => { },
-    error => {
-      console.log("ERROR: " + error);
-    }
-  );
+
 
   async createTable() {
     let Table = await this.ExecuteQuery("CREATE TABLE IF NOT EXISTS users (id INTEGER, email VARCHAR(16), gender VARCHAR(16), name VARCHAR(16), status VARCHAR(16))", []);
@@ -153,7 +165,7 @@ export default class Router extends Component {
       var item = rows.item(i);
       console.log("item from row item(i)_____________", item);
       fullData.push(item);
-      console.log(this.state.fullData);
+      console.log("full data full data full data full data full data full data full data full data full data full data full data full data ",fullData);
     }
     if (fullData?.length > 0) {      
       return fullData;
@@ -199,23 +211,28 @@ export default class Router extends Component {
   }
 
 
-  manageData = (DATA) => {
-    this.getData().then(res => {
-      if(res?.length > 0){
+  manageData = (DATA) => { this.addDataInDataBase(DATA);
+    this.getData().then(ress => {
+
+      if(ress?.length > 0){
         // this.setState({ data: res, searchedDataListandGrid: res });
-        let leftData = onlyInLeft(DATA, res, isSameUser);
-        let resLeftData = onlyInLeft(res, DATA, isSameUser);
+        let leftData = onlyInLeft(DATA, ress);
+        let resLeftData = onlyInLeft(ress, DATA);
+        console.log('leftdatadeleted resleftdata leftdatadeleted resleftdata leftdatadeleted resleftdata leftdatadeleted resleftdata leftdatadeleted resleftdata')
         if(leftData?.length > 0){
+          console.log('leftdatadeleted leftdatadeletedleftdatadeletedleftdatadeletedleftdatadeletedleftdatadeletedleftdatadeleted')
           this.deleteRow(leftData);
         
           // this.addDataInDataBase(leftData);
         } 
         if(resLeftData?.length > 0){
           this.addDataInDataBase(DATA);
+          console.log(' resleftdata   resleftdata resleftdata resleftdata resleftdata');
           // this.deleteRow(resLeftData)
         }
       } else {
         this.addDataInDataBase(DATA);
+        console.log(' dDataInDataBase last line, dDataInDataBase last line,  dDataInDataBase last line , dDataInDataBase last line   ')
       }
       // this.setState({ data: res, searchedDataListandGrid: res });
     });
