@@ -74,7 +74,7 @@ export default class Router extends Component {
 
   db = openDatabase(
     {
-      name: 'SQLite',
+      name: 'SQ',
       // location: 'default',
       // createFromLocation: '~SQLite1.db',
     },
@@ -106,7 +106,9 @@ export default class Router extends Component {
         fullData.push(itemsave);
        }
        if (fullData?.length > 0) 
-        this.setState({ data: fullData, searchedDataList: fullData, searchedDataGrid: fullData, searchedDataListandGrid: fullData });
+   
+        this.setState({ data: fullData,searchedDataListandGrid: fullData });
+        console.log("******************************************************************************",this.state.searchedDataListandGrid);
         // return false;
       
       
@@ -191,26 +193,36 @@ export default class Router extends Component {
 //      }
   }
 
+  async UpdateQuery(email,gender,name,status){
+    let updateQuery = await this.ExecuteQuery('UPDATE users SET  email = ?, gender = ?, name = ?, status = ? WHERE id = ?', [email,gender,name,status, [id]]);
+    console.log(updateQuery);
+  }
+
+
   manageData = (DATA) => {
     this.getData().then(res => {
       if(res?.length > 0){
-        this.setState({ data: res, searchedDataList: res, searchedDataGrid: res, searchedDataListandGrid: res });
+        // this.setState({ data: res, searchedDataListandGrid: res });
         let leftData = onlyInLeft(DATA, res, isSameUser);
         let resLeftData = onlyInLeft(res, DATA, isSameUser);
         if(leftData?.length > 0){
-          this.addDataInDataBase(leftData);
+          this.deleteRow(leftData);
+        
+          // this.addDataInDataBase(leftData);
         } 
         if(resLeftData?.length > 0){
-          this.deleteRow(resLeftData)
+          this.addDataInDataBase(DATA);
+          // this.deleteRow(resLeftData)
         }
       } else {
         this.addDataInDataBase(DATA);
       }
+      // this.setState({ data: res, searchedDataListandGrid: res });
     });
   }
 
   fetchCats(){
-    fetch('https://my-json-server.typicode.com/kiranb9555/fakeapi/usersData')
+    fetch('https://my-json-server.typicode.com/kiranb9555/updatedapi/usersData')
     .then(res => res.json())
     .then(res => {
       this.manageData(res);
@@ -266,7 +278,7 @@ export default class Router extends Component {
     this.setState({ presslist: true });
     this.setState({ searchedDataListandGrid: this.state.data });
     this.setState({ searchText: '' });
-
+    this.fetchCats();
   }
 
   secondPress = () => {
@@ -276,6 +288,7 @@ export default class Router extends Component {
       useNativeDriver: true
     }).start();
     this.setState({ presslist: false, searchedDataListandGrid: this.state.data, searchText: '' });
+    this.fetchCats();
   }
 
   render() {
