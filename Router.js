@@ -102,53 +102,10 @@ export default class Router extends Component {
   }
 
   addDataInDataBase = async (data) => {
-    // let Deletetable = await this.ExecuteQuery('DELETE FROM users',[]);
     for (let i = 0; i < data?.length; ++i) {
       let item = data[i];
-      
-      
       let singleInsert = await this.ExecuteQuery("INSERT INTO users (id, email, gender, name, status) VALUES ( ?, ?, ?, ?, ? )", [item.id, item.email, item.gender, item.name, item.status]);
     }
-       this.data = await this.ExecuteQuery('SELECT * FROM users', []);
-       var rows = data.rows;
-       let fullData = [];
-     
-      for (let i = 0; i < rows?.length; i++) {
-         var itemsave = rows.item(i);
-        fullData.push(itemsave);
-       }
-       if (fullData?.length > 0) 
-   
-        this.setState({ data: fullData,searchedDataListandGrid: fullData });
-        console.log("******************************************************************************",this.state.searchedDataListandGrid);
-        // return false;
-      
-      
-    
-    // // data?.forEach(item => {
-    // //   let singleInsert = await this.ExecuteQuery("INSERT INTO users (id, email, gender, name, status) VALUES ( ?, ?, ?, ?, ? )", [item.id, item.email, item.gender, item.name, item.status]);
-    // // })
-    // let Data = data;
-    // let query = "INSERT INTO users (id, email, gender, name, status) VALUES";
-    // for (let i = 0; i < Data.length; ++i) {
-    //   query = query + "('"
-    //     + Data[i].id //id
-    //     + "','"
-    //     + Data[i].email //first_name
-    //     + "','"
-    //     + Data[i].gender //last_name
-    //     + "','"
-    //     + Data[i].name //last_name
-    //     + "','"
-    //     + Data[i].status //is_deleted
-    //     + "')";
-    //   if (i != Data.length - 1) {
-    //     query = query + ",";
-    //   }
-    // }
-    // query = query + ";";
-    // let multipleInsert = await this.ExecuteQuery(query, []);
-    // console.log('multipleInsert');
   }
 
   // async DeleteQuery(id) {
@@ -163,9 +120,7 @@ export default class Router extends Component {
     let fullData = [];
     for (let i = 0; i < rows?.length; i++) {
       var item = rows.item(i);
-      console.log("item from row item(i)_____________", item);
       fullData.push(item);
-      console.log("full data full data full data full data full data full data full data full data full data full data full data full data ",fullData);
     }
     if (fullData?.length > 0) {      
       return fullData;
@@ -184,25 +139,7 @@ export default class Router extends Component {
   }
 
   addData = async (resJson) => {
-    // let data = Array(20).fill(1).map((item, index) => index+1);
-    // data.forEach(item => this.DeleteQuery(item))
     this.addDataInDataBase(resJson);
-    // let data = await this.ExecuteQuery('SELECT * FROM users', []);
-    // var rows = data.rows;
-    // let fullData = [];
-   
-    // for (let i = 0; i < rows.length; i++) {
-    //   var item = rows.item(i);
-    //   fullData.push(item);
-    // }
-    // console.log('fullData', fullData);
-//     if (fullData?.length > 0) {
-//       this.setState({ data: fullData, searchedDataList: fullData, searchedDataGrid: fullData, searchedDataListandGrid: fullData });
-//       return false;
-//      } else {
-//     //  this.addDataInDataBase(resJson);
-// console.log("error");
-//      }
   }
 
   async UpdateQuery(email,gender,name,status){
@@ -211,30 +148,21 @@ export default class Router extends Component {
   }
 
 
-  manageData = (DATA) => { this.addDataInDataBase(DATA);
+  manageData = (DATA) => {
     this.getData().then(ress => {
-
       if(ress?.length > 0){
-        // this.setState({ data: res, searchedDataListandGrid: res });
+        this.setState({data: ress, searchedDataListandGrid: ress});
         let leftData = onlyInLeft(DATA, ress);
         let resLeftData = onlyInLeft(ress, DATA);
-        console.log('leftdatadeleted resleftdata leftdatadeleted resleftdata leftdatadeleted resleftdata leftdatadeleted resleftdata leftdatadeleted resleftdata')
         if(leftData?.length > 0){
-          console.log('leftdatadeleted leftdatadeletedleftdatadeletedleftdatadeletedleftdatadeletedleftdatadeletedleftdatadeleted')
-          this.deleteRow(leftData);
-        
-          // this.addDataInDataBase(leftData);
+          this.addDataInDataBase(leftData);
         } 
         if(resLeftData?.length > 0){
-          this.addDataInDataBase(DATA);
-          console.log(' resleftdata   resleftdata resleftdata resleftdata resleftdata');
-          // this.deleteRow(resLeftData)
+          this.deleteRow(resLeftData)
         }
       } else {
         this.addDataInDataBase(DATA);
-        console.log(' dDataInDataBase last line, dDataInDataBase last line,  dDataInDataBase last line , dDataInDataBase last line   ')
       }
-      // this.setState({ data: res, searchedDataListandGrid: res });
     });
   }
 
@@ -245,7 +173,6 @@ export default class Router extends Component {
       this.manageData(res);
     }).catch(e => {
       this.manageData([]);
-      console.log('api ',e);
     });
   }
 
